@@ -1,4 +1,4 @@
-package user;
+package register;
 
 import base.BaseHttpClient;
 import base.PostApi;
