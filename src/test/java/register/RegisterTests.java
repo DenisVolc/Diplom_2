@@ -1,9 +1,13 @@
 package register;
 
 import base.BaseHttpClient;
+import base.DeleteApi;
 import base.PostApi;
 import constants.EndPoints;
 import io.qameta.allure.Step;
+import io.qameta.allure.junit4.DisplayName;
+import io.restassured.response.Response;
+import json.LoginRequestCard;
 import json.RegisterRequsetCard;
 import org.junit.After;
 import org.junit.Before;
@@ -13,55 +17,71 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 public class RegisterTests {
     private PostApi postApi = new PostApi();
+    private DeleteApi deleteApi = new DeleteApi();
     private RegisterRequsetCard registerCard;
+    private String accessToken;
+
     @Before
     public void setUp(){
          registerCard = new RegisterRequsetCard(
                 "a"+ BaseHttpClient.getRandomIndex() +"@a.com",
-                "123",
-                "Sasha"
+                 BaseHttpClient.getRandomIndex(),
+                 "Pushok"+BaseHttpClient.getRandomIndex()
         );
     }
     @Test
+    @DisplayName("Проверка успешной регистарции пользователя")
     public void registerTest(){
-        postApi.doPost(EndPoints.REGISTER,registerCard)
-                .then().statusCode(200)
-                .and().assertThat().body("success",equalTo(true))
-                .and().assertThat().body("user.email",equalTo(registerCard.getEmail()));
+        registerUserAssertThat(200,"user.email",registerCard.getEmail());
     }
 
     @Test
+    @DisplayName("Проверка повторной регистарции пользователя")
     public void duplicateRegisterTest(){
-        postApi.doPost(EndPoints.REGISTER,registerCard);
-        postApi.doPost(EndPoints.REGISTER,registerCard)
-                .then().statusCode(403)
-                .and().assertThat().body("message",equalTo("User already exists"));
+        registerUser();
+        registerUserAssertThat(403,"message","User already exists");
     }
     @Test
+    @DisplayName("Проверка регистарции без email")
     public void noEmailRegisterTest(){
         registerCard.setEmail("");
-        assertThatNoRequiredField();
+        registerUserAssertThat(403,"message","Email, password and name are required fields");
     }
     @Test
+    @DisplayName("Проверка регистарции без пароля")
     public void noPasswordRegisterTest(){
         registerCard.setPassword("");
-        assertThatNoRequiredField();
+        registerUserAssertThat(403,"message","Email, password and name are required fields");
     }
     @Test
+    @DisplayName("Проверка регистарции без имени")
     public void noNameRegisterTest(){
         registerCard.setName("");
-        assertThatNoRequiredField();
-    }
-    @Step
-    public void assertThatNoRequiredField(){
-        postApi.doPost(EndPoints.REGISTER,registerCard)
-                .then().statusCode(403)
-                .and().assertThat().body("message",equalTo("Email, password and name are required fields"));
+        registerUserAssertThat(403,"message","Email, password and name are required fields");
     }
 
+    //--------------------------------------------------------------
+    @Step("Регистрация пользователя и проверка ответа")
+    public void registerUserAssertThat(int statusCode,String bodyParm, String equalTo){
+        Response response = postApi.doPost(EndPoints.REGISTER,registerCard);
+
+        response.then().statusCode(statusCode)
+                .and().assertThat().body(bodyParm,equalTo(equalTo));
+        if(response.getStatusCode()==200){
+            accessToken = response.getBody().path("accessToken").toString();
+            System.out.println("Token:"+accessToken);
+        }
+    }
+    @Step("Регистрация пользователя")
+    public void registerUser(){
+        postApi.doPost(EndPoints.REGISTER,registerCard);
+    }
     @After
     public void cleanUp(){
-        //todo сделать удалеине созданного пользователя
+        if(accessToken!=null){
+            deleteApi.deleteUser(accessToken).then().statusCode(202);
+        }
     }
+
 
 }

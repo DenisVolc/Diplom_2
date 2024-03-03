@@ -23,6 +23,8 @@ public class BaseHttpClient {
                 .build();
     }
 
+
+
     protected Response doGetRequest(String path){
         return RestAssured.given()
                 .spec(baseRequestSpec())
@@ -54,8 +56,9 @@ public class BaseHttpClient {
                 .put(path)
                 .thenReturn();
     }
-    protected Response doDeleteRequest(String path){
+    protected Response doDeleteRequest(String path,String token){
         return RestAssured.given()
+                .header("Authorization", token)
                 .spec(BaseHttpClient.baseRequestSpec())
                 .delete(path)
                 .thenReturn();
@@ -65,6 +68,14 @@ public class BaseHttpClient {
                 .spec(BaseHttpClient.baseRequestSpec())
                 .body(body)
                 .delete(path)
+                .thenReturn();
+    }
+    protected Response doPatchRequest(String path,Object body,String token){
+        return RestAssured.given()
+                .header("Authorization", token)
+                .spec(BaseHttpClient.baseRequestSpec())
+                .body(body)
+                .patch(path)
                 .thenReturn();
     }
     public static String getRandomIndex(){
