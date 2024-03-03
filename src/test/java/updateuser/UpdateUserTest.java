@@ -1,6 +1,7 @@
 package updateuser;
 
 import base.BaseHttpClient;
+import base.DeleteApi;
 import base.PatchApi;
 import base.PostApi;
 import constants.EndPoints;
@@ -10,6 +11,7 @@ import io.restassured.response.Response;
 import json.LoginRequestCard;
 import json.RegisterRequsetCard;
 import json.UpdateUserReqsuestCard;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,6 +23,7 @@ public class UpdateUserTest {
     private UpdateUserReqsuestCard updateCard;
     private PostApi postApi = new PostApi();
     private PatchApi patchApi = new PatchApi();
+    private DeleteApi deleteApi = new DeleteApi();
     private String accessToken;
 
     @Before
@@ -43,21 +46,37 @@ public class UpdateUserTest {
     }
 
     @Test
-    @DisplayName("Проверка обновления данных пользователя")
+    @DisplayName("Проверка обновления данных пользователя после авторизации")
     public void update(){
+        loginUser();
         updateUserAssert(updateCard,200,"user.email",updateCard.getEmail());
     }
+    @Test
+    @DisplayName("Проверка обновления данных пользователя без авторизации")
+    public void updateNoLogin(){
+        updateUserAssert(updateCard,401,"message","You should be authorised");
+    }
+
     @Test
     @DisplayName("Проверка обновления данных пользователя старыми данными")
     public void sameUpdate(){
         updateUserAssert(registerCard,403,"message","User with such email already exists");
     }
+    //--------------------------------------------------------------------
     @Step("Регистрация пользователя")
     public void registerUser(){
         Response response = postApi.doPost(EndPoints.REGISTER,registerCard);
         if(response.getStatusCode()==200) {
             accessToken = response.getBody().path("accessToken").toString();
         }
+    }
+
+    @Step("Авторизация пользователя")
+    public void loginUser(){
+        Response response = postApi.doPost(EndPoints.LOGIN,loginCard);
+//        if(response.getStatusCode()==200) {
+//            accessToken = response.getBody().path("accessToken").toString();
+//        }
     }
     @Step("Обновить данные пользователя")
     public void updateUserAssert(Object body,int statusCode,String bodyParm,String equalTo){
@@ -68,5 +87,13 @@ public class UpdateUserTest {
 //                response.then().statusCode(200)
 //                .and().assertThat().body("user.email",equalTo(updateCard.getEmail()));
     }
+
+    @After
+    public void cleanUp(){
+        if(accessToken!=null){
+            deleteApi.deleteUser(accessToken).then().statusCode(202);
+        }
+    }
+
 
 }
