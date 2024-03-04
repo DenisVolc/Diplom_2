@@ -14,10 +14,12 @@ import json.UpdateUserReqsuestCard;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-
-public class UpdateUserTest {
+@RunWith(Parameterized.class)
+public class UpdateUserParmTest {
     private RegisterRequsetCard registerCard;
     private LoginRequestCard loginCard;
     private UpdateUserReqsuestCard updateCard;
@@ -25,6 +27,26 @@ public class UpdateUserTest {
     private PatchApi patchApi = new PatchApi();
     private DeleteApi deleteApi = new DeleteApi();
     private String accessToken;
+    private String updateEmail ;
+    private String updateName ;
+    private int statusCode;
+    private String bodyParm;
+    private String equalTo;
+
+    public UpdateUserParmTest(String updateEmail, String updateName) {
+        this.updateEmail = updateEmail;
+        this.updateName = updateName;
+    }
+
+    @Parameterized.Parameters
+    public static Object[][] dataSet(){
+        return new Object[][]{
+                {"1",""},
+                {"","1"},
+                {"1","1"},
+        };
+    }
+
 
     @Before
     public void setUp() {
@@ -33,35 +55,19 @@ public class UpdateUserTest {
                 BaseHttpClient.getRandomIndex(),
                 "Pushok"+BaseHttpClient.getRandomIndex()
         );
-        loginCard = new LoginRequestCard(
-                registerCard.getEmail(),
-                registerCard.getPassword()
-        );
         updateCard = new UpdateUserReqsuestCard(
-                1+loginCard.getEmail(),
-                1+registerCard.getName()
+                updateEmail+registerCard.getEmail(),
+                updateName+registerCard.getName()
         );
         registerUser();
-
     }
 
     @Test
-    @DisplayName("Проверка обновления данных пользователя после авторизации")
+    @DisplayName("Проверка обновления данных пользователя")
     public void update(){
-        loginUser();
-        updateUserAssert(updateCard,200,"user.email",updateCard.getEmail());
-    }
-    @Test
-    @DisplayName("Проверка обновления данных пользователя без авторизации")
-    public void updateNoLogin(){
-        updateUserAssert(updateCard,401,"message","You should be authorised");
+        updateUserAssert(updateCard,200,"user.email",updateCard.getEmail(),accessToken);
     }
 
-    @Test
-    @DisplayName("Проверка обновления данных пользователя старыми данными")
-    public void sameUpdate(){
-        updateUserAssert(registerCard,403,"message","User with such email already exists");
-    }
     //--------------------------------------------------------------------
     @Step("Регистрация пользователя")
     public void registerUser(){
@@ -70,22 +76,11 @@ public class UpdateUserTest {
             accessToken = response.getBody().path("accessToken").toString();
         }
     }
-
-    @Step("Авторизация пользователя")
-    public void loginUser(){
-        Response response = postApi.doPost(EndPoints.LOGIN,loginCard);
-//        if(response.getStatusCode()==200) {
-//            accessToken = response.getBody().path("accessToken").toString();
-//        }
-    }
     @Step("Обновить данные пользователя")
-    public void updateUserAssert(Object body,int statusCode,String bodyParm,String equalTo){
+    public void updateUserAssert(Object body,int statusCode,String bodyParm,String equalTo,String accessToken){
         Response response = patchApi.updateUser(accessToken,body);
         response.then().statusCode(statusCode)
                 .and().assertThat().body(bodyParm,equalTo(equalTo));
-        ;
-//                response.then().statusCode(200)
-//                .and().assertThat().body("user.email",equalTo(updateCard.getEmail()));
     }
 
     @After
