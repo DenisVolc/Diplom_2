@@ -1,4 +1,4 @@
-package order.get;
+package order;
 
 import base.BaseHttpClient;
 import base.GetApi;
@@ -50,7 +50,7 @@ public class GetOrdersTests {
 
     }
     @Test
-    @DisplayName("Проверка заказов пользователя без аутентификации")
+    @DisplayName("Проверка отображения заказов пользователя без аутентификации")
     public void noAuthGetOrdersTest(){
         getOrder().then().assertThat().statusCode(401)
                 .and().assertThat().body("message",equalTo("You should be authorised"));
