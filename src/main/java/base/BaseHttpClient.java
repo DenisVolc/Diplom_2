@@ -31,17 +31,26 @@ public class BaseHttpClient {
                 .get(path)
                 .thenReturn();
     }
-    protected Response doGetRequest(String path, String param, String data){
+    protected Response doGetRequest(String path, String token){
         return RestAssured.given()
+                .header("Authorization", token)
                 .spec(baseRequestSpec())
                 .when()
-                .queryParam(param,data)
                 .get(path)
                 .thenReturn();
     }
 
     protected Response doPostRequest(String path, Object body){
         return RestAssured.given()
+                .spec(baseRequestSpec())
+                .body(body)
+                .when()
+                .post(path)
+                .thenReturn();
+    }
+    protected Response doPostRequestWithAuth(String path, Object body,String token){
+        return RestAssured.given()
+                .header("Authorization", token)
                 .spec(baseRequestSpec())
                 .body(body)
                 .when()

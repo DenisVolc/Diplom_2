@@ -21,7 +21,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 @RunWith(Parameterized.class)
 public class UpdateUserParmTest {
     private RegisterRequsetCard registerCard;
-    private LoginRequestCard loginCard;
     private UpdateUserReqsuestCard updateCard;
     private PostApi postApi = new PostApi();
     private PatchApi patchApi = new PatchApi();
@@ -29,9 +28,6 @@ public class UpdateUserParmTest {
     private String accessToken;
     private String updateEmail ;
     private String updateName ;
-    private int statusCode;
-    private String bodyParm;
-    private String equalTo;
 
     public UpdateUserParmTest(String updateEmail, String updateName) {
         this.updateEmail = updateEmail;

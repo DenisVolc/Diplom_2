@@ -6,5 +6,8 @@ public class PostApi extends BaseHttpClient {
     public Response doPost(String path,Object body){
         return doPostRequest(path,body).thenReturn();
     }
+    public Response doPostWithAuth(String path,Object body,String token){
+        return doPostRequestWithAuth(path,body,token).thenReturn();
+    }
 
 }
