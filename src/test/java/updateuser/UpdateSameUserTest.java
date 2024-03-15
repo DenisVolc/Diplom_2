@@ -1,9 +1,6 @@
 package updateuser;
 
 import base.BaseHttpClient;
-import base.DeleteApi;
-import base.PatchApi;
-import base.PostApi;
 import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
@@ -12,15 +9,13 @@ import json.RegisterRequsetCard;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import supertest.SuperTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class UpdateSameUserTest {
+public class UpdateSameUserTest extends SuperTest {
     private RegisterRequsetCard beaconUserCard;
     private RegisterRequsetCard testUserCard;
-    private PostApi postApi = new PostApi();
-    private PatchApi patchApi = new PatchApi();
-    private DeleteApi deleteApi = new DeleteApi();
     private String testAccessToken;
     private String beaconAccessToken;
 
@@ -28,12 +23,12 @@ public class UpdateSameUserTest {
     @Before
     public void setUp() {
         beaconUserCard = new RegisterRequsetCard(
-                "beaconUSer" + BaseHttpClient.getRandomIndex() + "@b.com",
+                "beacon_user" + BaseHttpClient.getRandomIndex() + "@b.com",
                 BaseHttpClient.getRandomIndex(),
                 "Pushok"+BaseHttpClient.getRandomIndex()
         );
         testUserCard = new RegisterRequsetCard(
-                "TestUSer" + BaseHttpClient.getRandomIndex() + "@b.com",
+                "test_user" + BaseHttpClient.getRandomIndex() + "@b.com",
                 BaseHttpClient.getRandomIndex(),
                 "Sasha"+BaseHttpClient.getRandomIndex()
         );
@@ -62,7 +57,7 @@ public class UpdateSameUserTest {
         response.then().statusCode(statusCode)
                 .and().assertThat().body(bodyParm,equalTo(equalTo));
     }
-    @Step("Удалить пользователя")
+
     public void deleteUser(String accessToken){
         if(accessToken!=null){
             deleteApi.deleteUser(accessToken).then().statusCode(202);

@@ -1,31 +1,20 @@
 package updateuser;
 
-import base.BaseHttpClient;
-import base.DeleteApi;
-import base.PatchApi;
-import base.PostApi;
+
 import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import json.LoginRequestCard;
-import json.RegisterRequsetCard;
 import json.UpdateUserReqsuestCard;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import supertest.SuperTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 @RunWith(Parameterized.class)
-public class UpdateUserParmTest {
-    private RegisterRequsetCard registerCard;
-    private UpdateUserReqsuestCard updateCard;
-    private PostApi postApi = new PostApi();
-    private PatchApi patchApi = new PatchApi();
-    private DeleteApi deleteApi = new DeleteApi();
-    private String accessToken;
+public class UpdateUserParmTest extends SuperTest {
     private String updateEmail ;
     private String updateName ;
 
@@ -46,16 +35,12 @@ public class UpdateUserParmTest {
 
     @Before
     public void setUp() {
-        registerCard = new RegisterRequsetCard(
-                "b" + BaseHttpClient.getRandomIndex() + "@b.com",
-                BaseHttpClient.getRandomIndex(),
-                "Pushok"+BaseHttpClient.getRandomIndex()
-        );
+        doBefore();
         updateCard = new UpdateUserReqsuestCard(
                 updateEmail+registerCard.getEmail(),
                 updateName+registerCard.getName()
         );
-        registerUser();
+        registerUser(registerCard);
     }
 
     @Test
@@ -63,10 +48,9 @@ public class UpdateUserParmTest {
     public void update(){
         updateUserAssert(updateCard,200,"user.email",updateCard.getEmail(),accessToken);
     }
-
     //--------------------------------------------------------------------
     @Step("Регистрация пользователя")
-    public void registerUser(){
+    public void registerUser(Object registerCard){
         Response response = postApi.doPost(EndPoints.REGISTER,registerCard);
         if(response.getStatusCode()==200) {
             accessToken = response.getBody().path("accessToken").toString();
@@ -78,13 +62,4 @@ public class UpdateUserParmTest {
         response.then().statusCode(statusCode)
                 .and().assertThat().body(bodyParm,equalTo(equalTo));
     }
-
-    @After
-    public void cleanUp(){
-        if(accessToken!=null){
-            deleteApi.deleteUser(accessToken).then().statusCode(202);
-        }
-    }
-
-
 }

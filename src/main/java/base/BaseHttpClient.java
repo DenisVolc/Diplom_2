@@ -1,7 +1,6 @@
 package base;
 
 import constants.EndPoints;
-import constants.EndPoints;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.ErrorLoggingFilter;
@@ -57,25 +56,10 @@ public class BaseHttpClient {
                 .post(path)
                 .thenReturn();
     }
-    protected Response doPutRequest(String path, String param, String data){
-        return RestAssured.given()
-                .spec(baseRequestSpec())
-                .when()
-                .queryParam(param,data)
-                .put(path)
-                .thenReturn();
-    }
     protected Response doDeleteRequest(String path,String token){
         return RestAssured.given()
                 .header("Authorization", token)
                 .spec(BaseHttpClient.baseRequestSpec())
-                .delete(path)
-                .thenReturn();
-    }
-    protected Response doDeleteRequest(String path,Object body){
-        return RestAssured.given()
-                .spec(BaseHttpClient.baseRequestSpec())
-                .body(body)
                 .delete(path)
                 .thenReturn();
     }

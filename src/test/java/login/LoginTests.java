@@ -1,40 +1,21 @@
 package login;
 
-import base.BaseHttpClient;
-import base.DeleteApi;
-import base.PostApi;
+
 import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import json.LoginRequestCard;
-import json.RegisterRequsetCard;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import supertest.SuperTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-public class LoginTests {
-    private PostApi postApi = new PostApi();
-
-    private DeleteApi deleteApi = new DeleteApi();
-    private LoginRequestCard loginCard;
-    private RegisterRequsetCard registerCard;
-    private String accessToken;
+public class LoginTests extends SuperTest {
 
     @Before
     public void setUp() {
-        registerCard = new RegisterRequsetCard(
-                "b" + BaseHttpClient.getRandomIndex() + "@b.com",
-                BaseHttpClient.getRandomIndex(),
-                "Pushok"+BaseHttpClient.getRandomIndex()
-        );
-        loginCard = new LoginRequestCard(
-                registerCard.getEmail(),
-                registerCard.getPassword()
-        );
-
+        doBefore();
     }
     @Test
     @DisplayName("Проверка успешной авторизации")
@@ -47,6 +28,21 @@ public class LoginTests {
     public void wrongEmailLoginTest(){
         registerUser();
         loginCard.setEmail("1"+registerCard.getEmail());
+        loginUserAssertThat(401,"message","email or password are incorrect");
+    }
+    @Test
+    @DisplayName("Проврка авторизации с неверным паролем")
+    public void wrongPasswordLoginTest(){
+        registerUser();
+        loginCard.setPassword("1"+registerCard.getPassword());
+        loginUserAssertThat(401,"message","email or password are incorrect");
+    }
+    @Test
+    @DisplayName("Проврка авторизации с неверным логином и паролем")
+    public void wrongEmailAndPasswordLoginTest(){
+        registerUser();
+        loginCard.setEmail("1"+registerCard.getEmail());
+        loginCard.setPassword("1"+registerCard.getPassword());
         loginUserAssertThat(401,"message","email or password are incorrect");
     }
     //--------------------------------------------------------------------------------------------------
@@ -62,12 +58,5 @@ public class LoginTests {
         postApi.doPost(EndPoints.LOGIN,loginCard)
                 .then().statusCode(statusCode)
                 .and().assertThat().body(bodyParm,equalTo(equalTo));
-
-    }
-    @After
-    public void cleanUp(){
-        if(accessToken!=null){
-            deleteApi.deleteUser(accessToken).then().statusCode(202);
-        }
     }
 }
