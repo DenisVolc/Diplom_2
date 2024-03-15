@@ -19,12 +19,9 @@ import org.junit.runners.Parameterized;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-
-
 @RunWith(Parameterized.class)
 public class UpdateUserNegativParmTest {
     private RegisterRequsetCard registerCard;
-    private LoginRequestCard loginCard;
     private UpdateUserReqsuestCard updateCard;
     private PostApi postApi = new PostApi();
     private PatchApi patchApi = new PatchApi();
@@ -81,14 +78,11 @@ public class UpdateUserNegativParmTest {
         response.then().statusCode(statusCode)
                 .and().assertThat().body(bodyParm,equalTo(equalTo));
     }
-
     @After
     public void cleanUp(){
         if(accessToken!=null){
             deleteApi.deleteUser(accessToken).then().statusCode(202);
         }
     }
-
-
 }
 
