@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: register.RegisterTests
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.329 s - in register.RegisterTests
