@@ -8,9 +8,7 @@ import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import json.LoginRequestCard;
 import json.RegisterRequsetCard;
-import json.UpdateUserReqsuestCard;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +17,9 @@ import org.junit.runners.Parameterized;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
-@RunWith(Parameterized.class)
 public class UpdateSameUserTest {
-    private RegisterRequsetCard registerCard;
+    private RegisterRequsetCard firstUserCard;
+    private RegisterRequsetCard secondUserCard;
     private PostApi postApi = new PostApi();
     private PatchApi patchApi = new PatchApi();
     private DeleteApi deleteApi = new DeleteApi();
@@ -30,22 +28,31 @@ public class UpdateSameUserTest {
 
     @Before
     public void setUp() {
-        registerCard = new RegisterRequsetCard(
+        firstUserCard = new RegisterRequsetCard(
                 "b" + BaseHttpClient.getRandomIndex() + "@b.com",
                 BaseHttpClient.getRandomIndex(),
                 "Pushok"+BaseHttpClient.getRandomIndex()
         );
-        registerUser();
+        secondUserCard = new RegisterRequsetCard(
+                "с" + BaseHttpClient.getRandomIndex() + "@b.com",
+                BaseHttpClient.getRandomIndex(),
+                "Sasha"+BaseHttpClient.getRandomIndex()
+        );
+
+        registerUser(firstUserCard);
+
+        registerUser(secondUserCard);//токен accessToken перезаписывается актуальный для тестируемого пользователя
     }
     @Test
     @DisplayName("Проверка обновления данных пользователя старыми данными")
     public void sameUpdate(){
-        updateUserAssert(registerCard,403,"message","User with such email already exists",accessToken);
+        updateUserAssert(firstUserCard,403,"message","User with such email already exists",accessToken);
     }
-    //--------------------------------------------------------------------
+
+    //--------------------------------------------------Steps-----------------------------------------------------------
     @Step("Регистрация пользователя")
-    public void registerUser(){
-        Response response = postApi.doPost(EndPoints.REGISTER,registerCard);
+    public void registerUser(Object body){
+        Response response = postApi.doPost(EndPoints.REGISTER,body);
         if(response.getStatusCode()==200) {
             accessToken = response.getBody().path("accessToken").toString();
         }
@@ -56,10 +63,14 @@ public class UpdateSameUserTest {
         response.then().statusCode(statusCode)
                 .and().assertThat().body(bodyParm,equalTo(equalTo));
     }
-    @After
-    public void cleanUp(){
+    @Step("Удалить пользователя")
+    public void deleteUser(){
         if(accessToken!=null){
             deleteApi.deleteUser(accessToken).then().statusCode(202);
         }
+    }
+    @After
+    public void cleanUp(){
+        deleteUser(); //todo дописать чтоб удалить первого пользователя
     }
 }
