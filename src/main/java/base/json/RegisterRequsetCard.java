@@ -1,4 +1,4 @@
-package json;
+package base.json;
 
 public class RegisterRequsetCard {
     private String email;

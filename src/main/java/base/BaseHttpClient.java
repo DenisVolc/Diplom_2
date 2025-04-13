@@ -22,8 +22,6 @@ public class BaseHttpClient {
                 .build();
     }
 
-
-
     protected Response doGetRequest(String path){
         return RestAssured.given()
                 .spec(baseRequestSpec())

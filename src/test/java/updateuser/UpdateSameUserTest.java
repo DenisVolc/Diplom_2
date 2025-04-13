@@ -5,7 +5,7 @@ import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import json.RegisterRequsetCard;
+import base.json.RegisterRequsetCard;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

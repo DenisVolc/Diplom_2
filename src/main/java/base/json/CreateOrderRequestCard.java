@@ -1,4 +1,4 @@
-package json;
+package base.json;
 
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package supertest;
 
 import base.*;
-import json.CreateOrderRequestCard;
-import json.LoginRequestCard;
-import json.RegisterRequsetCard;
-import json.UpdateUserReqsuestCard;
+import base.json.CreateOrderRequestCard;
+import base.json.LoginRequestCard;
+import base.json.RegisterRequsetCard;
+import base.json.UpdateUserReqsuestCard;
 import org.junit.After;
 
 import java.util.List;

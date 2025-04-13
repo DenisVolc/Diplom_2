@@ -9,6 +9,4 @@ public class EndPoints {
     public  static final String USER = "/api/auth/user/";//GET //DELETE //Patch
     public static final String INGREDIENTS = "/api/ingredients/";//GET
     public static final String ORDERS = "/api/orders";//POST
-
-
 }
