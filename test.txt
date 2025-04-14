@@ -1,0 +1,26 @@
+точно есть:
+{
+    "email": "justuser1@ju.do",
+    "password": "juo",
+    "name": "JustUser"
+}
+"accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTg2OWUwOWVkMjgwMDAxYjNjNDc5NCIsImlhdCI6MTcwOTczMDI3MiwiZXhwIjoxNzA5NzMxNDcyfQ.LBGjIKymzuecPpe5k7BQaTOt7QPdWBG_60YTWh7X9cQ",
+
+
+{
+    "success": true,
+    "user": {
+        "email": "justuser@ju.do",
+        "name": "JustUser"
+    },
+    "accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZTg2N2VkOWVkMjgwMDAxYjNjNDc4YyIsImlhdCI6MTcwOTcyOTc3MywiZXhwIjoxNzA5NzMwOTczfQ.dTq3QFcRCa3yQW3eZSLxAGqEbK0MMQRcqwmyQmKUrF8",
+    "refreshToken": "bf9b5e4d9935a24c9edc4d16f746063794b2d02c0c9549570370062614234aef65a7c1293e6904b2"
+}
+"password": "juo",
+
+-зарегестрировать пользователя
+-обновить пользователя тем же email
+
+-зарегестрировать пользователя1
+-зарегестрировать пользователя2
+-обновить пользователя2 с токеном пользователя2 email-ом пользователя1
