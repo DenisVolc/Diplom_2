@@ -1,16 +1,16 @@
-package updateuser;
+package restAssuredTests.updateuser;
 
 
 import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import base.json.UpdateUserReqsuestCard;
+import restassured.json.UpdateUserReqsuestCard;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import supertest.SuperTest;
+import restAssuredTests.supertest.SuperTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 @RunWith(Parameterized.class)

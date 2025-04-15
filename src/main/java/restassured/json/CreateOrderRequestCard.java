@@ -1,4 +1,4 @@
-package base.json;
+package restassured.json;
 
 import java.util.List;
 

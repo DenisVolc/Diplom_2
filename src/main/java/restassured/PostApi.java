@@ -1,4 +1,4 @@
-package base;
+package restassured;
 
 import io.restassured.response.Response;
 

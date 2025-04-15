@@ -1,4 +1,4 @@
-package base.json;
+package restassured.json;
 
 public class LoginRequestCard {
     private String email;

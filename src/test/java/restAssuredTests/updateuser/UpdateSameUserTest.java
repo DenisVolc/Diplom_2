@@ -1,15 +1,15 @@
-package updateuser;
+package restAssuredTests.updateuser;
 
-import base.BaseHttpClient;
+import restAssuredTests.supertest.SuperTest;
+import restassured.BaseHttpClient;
 import constants.EndPoints;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.response.Response;
-import base.json.RegisterRequsetCard;
+import restassured.json.RegisterRequsetCard;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import supertest.SuperTest;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 

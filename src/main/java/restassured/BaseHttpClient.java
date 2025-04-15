@@ -1,4 +1,4 @@
-package base;
+package restassured;
 
 import constants.EndPoints;
 import io.restassured.RestAssured;

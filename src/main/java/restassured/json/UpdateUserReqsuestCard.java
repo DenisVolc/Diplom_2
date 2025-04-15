@@ -1,31 +1,20 @@
-package base.json;
+package restassured.json;
 
-public class RegisterRequsetCard {
+public class UpdateUserReqsuestCard {
     private String email;
-    private String password;
     private String name;
 
-    public RegisterRequsetCard(String email, String password, String name) {
+    public UpdateUserReqsuestCard(String email, String name) {
         this.email = email;
-        this.password = password;
         this.name = name;
     }
 
     public String getEmail() {
-
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getName() {

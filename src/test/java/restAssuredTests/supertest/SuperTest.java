@@ -1,10 +1,10 @@
-package supertest;
+package restAssuredTests.supertest;
 
-import base.*;
-import base.json.CreateOrderRequestCard;
-import base.json.LoginRequestCard;
-import base.json.RegisterRequsetCard;
-import base.json.UpdateUserReqsuestCard;
+import restassured.*;
+import restassured.json.CreateOrderRequestCard;
+import restassured.json.LoginRequestCard;
+import restassured.json.RegisterRequsetCard;
+import restassured.json.UpdateUserReqsuestCard;
 import org.junit.After;
 
 import java.util.List;
@@ -34,14 +34,13 @@ public class SuperTest {
         );
     }
     public void getCreateOrderCard(){
-        //не могу сохдать пустую карточку заказа, что бы потом положить туда ингредиенты
+        //немогу создать пустую карточку заказа, что бы потом положить туда ингредиенты
         //Потому что для инициализации надо поместить какой-то ингредиент в конструктор,
         //поэтому пришлось прибегнуть к такому костылю. Хочу заметить, что тут не просто хардкод)
         //Этот костыль будет работать при разном размере ingredients.
         ingredients = getApi.getIngredients().getBody().path("data._id");
         int halfIngredientsSize = (ingredients.size()/2)+1;//округляю в большую сторону
         createOrderCard =  new CreateOrderRequestCard(ingredients.subList(halfIngredientsSize-1,halfIngredientsSize));
-        
 
     }
 
