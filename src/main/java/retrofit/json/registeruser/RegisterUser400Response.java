@@ -1,10 +1,10 @@
-package retrofit.json.createuser;
+package retrofit.json.registeruser;
 
-public class CreateUser400Response {
+public class RegisterUser400Response {
     private String success;
     private String message;
 
-    public CreateUser400Response(String success, String message) {
+    public RegisterUser400Response(String success, String message) {
         this.success = success;
         this.message = message;
     }

@@ -1,10 +1,9 @@
-package retrofitTests.login;
+package retrofitTests.user;
 
 
 import org.junit.Test;
-import retrofit.json.ResponseUserInfo;
-import retrofit.json.createuser.CreateUser200Response;
-import retrofit.json.createuser.CreateUserRequest;
+import retrofit.json.registeruser.RegisterUser200Response;
+import retrofit.json.registeruser.RegisterUserRequest;
 import retrofitTests.SuperTest;
 import retrofit2.Response;
 
@@ -19,9 +18,11 @@ public class LoginTests extends SuperTest {
         String email = "a"+Math.random()+"@a.com";
         String password = "password";
         String userName = "username2134";
-        CreateUserRequest body = new CreateUserRequest(email,password,userName);
-        Response<CreateUser200Response> response = createUserAPI.createUser(body).execute();
-        assertTrue(response.isSuccessful());
 
+        RegisterUserRequest body = new RegisterUserRequest(email,password,userName);
+        Response<RegisterUser200Response> response = registerUserAPI.regisetUser(body).execute();
+
+        assertTrue(response.isSuccessful());
+        assertEquals(response.body().getUser().getName(),userName);
     }
 }
